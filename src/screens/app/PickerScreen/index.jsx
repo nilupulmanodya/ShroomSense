@@ -5,11 +5,60 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { styles } from "./styles";
 import NaviBar from "../../../components/navibar/NaviBar";
+import * as ImagePicker from "expo-image-picker";
 
 const PickerScreen = ({ navigation, route }) => {
+  const [image, setImage] = useState(null);
+
+  const pickImageGallery = async () => {
+    // No permissions request is necessary for launching the image library
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      navigation.navigate("ResultScreen", {
+        title: "Result",
+        image: result.assets[0].uri,
+      });
+    }
+  };
+
+  const pickImageCamera = async () => {
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this appp to access your camera!");
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+    });
+
+    // Explore the result
+    console.log(result);
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      navigation.navigate("ResultScreen", {
+        title: "Result",
+        image: result.assets[0].uri,
+      });
+    }
+  };
+
   return (
     <View style={styles.root}>
       <NaviBar
@@ -26,7 +75,8 @@ const PickerScreen = ({ navigation, route }) => {
 
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("ResultScreen", { title: "Result" });
+            // navigation.navigate("ResultScreen", { title: "Result" });
+            pickImageCamera();
           }}
           style={styles.pickerButton}
         >
@@ -36,7 +86,12 @@ const PickerScreen = ({ navigation, route }) => {
           <Text style={styles.pickerButtonTitle}>Pick from camera</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.pickerButton}>
+        <TouchableOpacity
+          onPress={() => {
+            pickImageGallery();
+          }}
+          style={styles.pickerButton}
+        >
           <View style={styles.pickerButtonView}>
             <Image source={require("../../../assets/icons/gallery.png")} />
           </View>

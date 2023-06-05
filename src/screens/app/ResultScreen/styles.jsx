@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
     width: wp(90),
     alignSelf: "center",
   },
-  selectImage: { borderRadius: 15, resizeMode: "contain" },
+  selectImage: { borderRadius: 15, resizeMode: "cover" },
   imageTitle: {
     fontSize: RFValue(20),
     fontWeight: "bold",

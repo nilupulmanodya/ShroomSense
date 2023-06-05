@@ -26,7 +26,7 @@ const ResultScreen = ({ navigation, route }) => {
         <Text style={styles.title}>{route.params.title}</Text>
 
         <ImageBackground
-          source={require("../../../assets/images/image1.png")}
+          source={{ uri: route.params.image }}
           style={styles.selectImageView}
           imageStyle={styles.selectImage}
         >
